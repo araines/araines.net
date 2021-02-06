@@ -1,0 +1,240 @@
+---
+title: Getting started with PHP serverless
+date:  2017-04-17 18:14:04 +0000
+coverImage: /assets/blog/images/2017-04-17-php-serverless.png
+coverImageAlt: Getting started with serverless PHP
+coverImageWidth: 2000
+coverImageHeight: 1125
+excerpt:  As a full-time PHP developer that’s been following the serverless movement for quite some time, I’ve been stuck without an outlet to take advantage of Functions as a Service (FaaS).
+---
+*This is a cross-post from the A Cloud Guru blog, original article found here:
+[https://read.acloud.guru/serverless-php-630bb3e950f5](https://read.acloud.guru/serverless-php-630bb3e950f5)*
+
+**How to use the Serverless Framework to get PHP working in AWS Lambda with an
+experience that closely mimics native languages**
+
+As a full-time PHP developer that’s been following the serverless movement for
+quite some time, I’ve been stuck without an outlet to take advantage of
+Functions as a Service (FaaS).
+
+[AWS Lambda](https://aws.amazon.com/lambda/) is the best known FaaS platform
+which supports a number of native languages — but poor old PHP is not amongst
+them (yet). AWS has published several [articles on how to take advantage of
+other non-native scripting
+languages](https://aws.amazon.com/blogs/compute/scripting-languages-for-aws-lambda-running-php-ruby-and-go/)
+such as PHP, but those solutions lack the power provided by the native
+languages.
+
+Why PHP, you ask? Well for someone who works with PHP daily, being able to work
+with the familiar tools and languages is a huge boost to productivity. While
+Node or Python might provide better performance at runtime, getting something up
+and running in a familiar place is very valuable — especially when you can’t
+spare the hours to invest in learning a new language and evaluate new testing
+frameworks.
+
+If you’ve been hunting around this area like me, you’ve no doubt come across
+Robert Anderson’s (Zerosharp)
+[blog](http://blog.zerosharp.com/the-serverless-framework-and-php/) and
+[repo](https://github.com/ZeroSharp/serverless-php) which gets a very simple
+framework going with PHP and [Serverless Framework](https://serverless.com/).
+This was my starting point and inspiration.
+
+#### The Goal
+
+The principle goal here is to get PHP working in AWS Lambda with an experience
+as close as possible to the native languages. The hope is that if AWS add PHP as
+an official language in future then the porting will be a very straight forward
+process.
+
+Simple “Hello World” performance should be within the realms of what we would
+expect from a more standard Nginx/FPM stack, although we can clearly expect some
+overhead from needing to shim PHP.
+
+#### Building the Shim
+
+Like the original Zerosharp implementation, we will use Node as the entry point
+in order to get our PHP instance running and Serverless Framework to do all the
+heavy lifting for us. Make sure you have [Serverless
+installed](https://serverless.com/framework/docs/providers/aws/guide/installation/)
+(I’m using Node 6.2 and Serverless 1.10).
+
+    serverless install --url 
+
+The GitHub repository can be found
+[here](https://github.com/araines/serverless-php/tree/v0.1.0) (version 0.1.0
+used in this article).
+
+The principle of the shim is this:
+
+* Use `argv` for passing the event object from Node to PHP
+* Use `stdout` for passing output from PHP to Node
+* Use `stderr` for passing log lines from PHP to Node
+* Pass environment variables through to PHP for full access
+* JSON is used as the common messaging format to interface the languages
+
+For those familiar with Symfony components, the PHP entry point may be familiar.
+It sets up a service container, loading the services from `config/services.yml`
+in the usual manner. The event object is grabbed from `argv` and returned to
+native PHP array form. Then the environment variable `HANDLER` is used to find
+the appropriate service from the container, the service is called and the return
+value is passed back via `stdout` after being JSON encoded.
+
+#### Building your Handler
+
+Create a new class which implements the `Handler` interface:
+
+```php
+<?php
+namespace Raines\Serverless;
+
+class ExampleHandler implements Handler
+{
+    public function handle(array $event)
+    {
+        return "Hello World!";
+    }
+}
+```
+
+Set up a new service within `config/services.yml` with an appropriate name. If
+you are unfamiliar with the Symfony Service Container, you can read more about
+it [here](http://symfony.com/doc/current/service_container.html).
+
+```yaml
+services:
+  handler.example:
+    class: Raines\Serverless\ExampleHandler
+```
+
+Finally add the new function to the `serverless.yml` :
+
+```yaml
+functions:
+  example:
+    handler: handler.handle     # Always handler.handle
+    environment:
+      HANDLER: handler.example  # The name of your service
+```
+
+#### The Performance of PHP
+
+For those unfamiliar with Lambda, there is no way to select how much CPU power
+you would like for your function directly. Instead, you select how much memory
+you want and the CPU scales with that. There are also cold- and warm-starts
+which we have to contend with.
+
+> In the AWS Lambda resource model, you choose the amount of memory you want for
+> your function, and are allocated proportional CPU power and other resources. For
+example, choosing 256MB of memory allocates approximately twice as much CPU
+power to your Lambda function as requesting 128MB of memory and half as much CPU
+power as choosing 512MB of memory. You can set your memory in 64MB increments
+from 128MB to 1.5GB.
+
+> [AWS Lambda FAQs](https://aws.amazon.com/lambda/faqs/)
+
+If you want some seriously in-depth analysis on Lambda performance, [Robert
+Vojta](https://medium.com/@robertvojta) published an interesting
+[post](https://robertvojta.com/aws-journey-api-gateway-lambda-vpc-performance-452c6932093b).
+I’m not going to do anything that complex here, and I recommend you benchmark
+your own solutions once written to determine what works best for your use-case.
+
+I’ve tested a simple Hello World function with various memory sizes here for
+comparison. The durations here are real-world, i.e. I’m calling the function via
+API Gateway from an EC2 instance, both running in the same region. The figures
+here are averaged over multiple executions once the function has been warmed.
+
+<span class="figcaption_hack">Real world testing of PHP vs Node response times via API Gateway</span>
+
+From my limited testing, it appears that you get very consistent performance
+from Node (for very simple tasks) regardless of memory. However, for PHP the
+performance only starts to approach that of Node around 512MB-768MB. At this
+stage you pay approximately a 20ms penalty for using PHP, which I think is
+reasonable.
+
+Another element worth considering is how you bundle and package your function.
+Whilst developing, you’ll inevitably want the dev tools installed with
+[Composer](https://getcomposer.org/), but for production they aren’t necessary.
+In fact, the fewer packages you can bundle, the better. You also want to ensure
+you have an optimised autoloader for production as it provides a fairly
+significant improvement.
+
+<span class="figcaption_hack">Using response times to compare the performance of different composer options</span>
+
+#### Adding Context to Serverless PHP
+
+One of the missing features of my initial implementation of a PHP shim for
+Serverless Framework was access to the Lambda context object. The context object
+is passed as the second parameter in native languages which gives you access to
+information available from Lambda.
+
+The most useful thing available is the ability find the execution time remaining
+before AWS Lambda terminates your Lambda function. This is also the most
+challenging piece to get right as it requires two-way communication between PHP
+and Node.
+
+> The codebase can be found
+> [here](https://github.com/araines/serverless-php/tree/v0.2.0) (v0.2.0).
+
+#### Implementing the cross-language function call
+
+I got this working by using an additional file descriptor for communication
+between Node and PHP (file descriptor 3). Here is the extract where the magic
+happens on the Node side of things:
+
+```javascript
+// Request for remaining time from context
+proc.stdio[3].on('data', function (data) {
+  var remaining = context.getRemainingTimeInMillis();
+  proc.stdio[3].write(`${remaining}\n`);
+});
+```
+
+This ensures that as soon as we get any data through on FD3 we ask the real
+context object for the remaining time, then respond back on the same stream
+terminated with a new line character. The PHP side of things looks a bit like
+this:
+
+```javascript
+$fd = fopen('php://fd/3', 'r+');
+
+public function getRemainingTimeInMillis() : int
+{
+  fwrite($this->fd, 'x');
+
+return (int) fgets($this->fd);
+}
+```
+
+It writes a single meaningless character to the stream to trigger the response
+from Node and then reads up until the newline character, completing the remote
+function call.
+
+#### Performance Implications
+
+Given that we are passing information back and forth between the two runtimes,
+there is going to be some overhead involved. Using a local execution environment
+I measured the time taken to execute the `getRemainingTimeInMillis()` both
+natively within Node and via the PHP remote call.
+
+Whilst setting up the testing I noticed that the initial execution time in PHP
+was very slow, but then subsequent calls would be fast. So I’ve broken the
+timings out to allow for both.
+
+* **Node** first execution: 0.066ms, subsequent execution: 0.055ms
+* **PHP** first execution: 1.504ms, subsequent execution: 0.045ms
+
+Clearly the first execution is quite expensive in PHP, however the subsequent
+executions appear to have no measurable overhead. This is great news if you need
+to have a loop where this value is checked regularly.
+
+#### Limitations and Future Work
+
+PHP typically runs within a request/response environment with the superglobals
+set and ready to go by PHP-FPM, Apache, or something similar. It would be an
+interesting project to setup a similar environment that uses PHP and associated
+frameworks (e.g. Symfony, Laravel) as if you were running with a real webserver
+— when in reality a combination of API Gateway and Lambda provide the
+infrastructure.
+
+It would also be great to package some of the common tasks in a Serverless
+plugin. For example, running composer with the right flags during deployment.

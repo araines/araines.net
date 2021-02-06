@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
-import { Box, useColorMode } from "theme-ui"
+import { Box, IconButton, useColorMode } from "theme-ui"
 import Button from "./Button"
+import Icon from "@mdi/react"
+import { mdiMoonWaningCrescent } from "@mdi/js"
 
 const ThemeToggle = (props) => {
   const [colorMode, setColorMode] = useColorMode()
@@ -22,14 +24,14 @@ const ThemeToggle = (props) => {
         transition: "opacity .25s ease-in-out",
       }}
     >
-      <Button
-        sx={{ bg: "gray", py: 1, px: 2, fontSize: 0 }}
+      <IconButton
+        aria-label="Toggle dark mode"
         onClick={(e) => {
           setColorMode(colorMode === "default" ? "dark" : "default")
         }}
       >
-        switch to {colorMode === "default" ? "dark" : "light"} mode
-      </Button>
+        <Icon path={mdiMoonWaningCrescent} rotate={-35} />
+      </IconButton>
     </Box>
   )
 }

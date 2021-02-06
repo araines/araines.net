@@ -55,4 +55,20 @@ export default {
     inner: "inset 0 2px 4px 0 rgba(0,0,0,0.06)",
     none: "none",
   },
+  images: {
+    avatar: {
+      width: 110,
+      height: 110,
+    },
+  },
+  links: {
+    post: {
+      color: "inherit",
+      textDecoration: "none",
+      ":hover,:focus": {
+        color: "primary",
+        textDecoration: "underline",
+      },
+    },
+  },
 }
