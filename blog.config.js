@@ -6,7 +6,7 @@ module.exports = {
     "Personal blog for Andy Raines.  Software engineering, technology tinkering and more.",
   author: "Andy Raines",
   analytics: "", // put your google analytics code here to add tracking
-  shareImage: "https://araines.net/img/screenshot.png",
+  shareImage: "https://araines.net/assets/images/araines.jpg",
   shareImageAlt: "Andy Raines",
   postsPerPage: 8,
   showDate: true, // if you would like the date to appear on the blog posts

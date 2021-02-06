@@ -23,6 +23,9 @@ const Posts = ({ posts, prevPosts, nextPosts }) => {
                   <a>{post.title}</a>
                 </Link>
               </Heading>
+              <Text sx={{fontStyle: "italic" }}>
+                {new Date(post.date).toLocaleDateString()}
+              </Text>
               {post.coverImage && (
                 <Box
                   sx={{

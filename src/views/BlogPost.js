@@ -36,7 +36,6 @@ const BlogPost = ({ post }) => {
             </Heading>
             {config.showDate && (
               <Text sx={{ fontStyle: "italic" }}>
-                Originally published on{" "}
                 {new Date(post.date).toLocaleDateString()}
               </Text>
             )}
