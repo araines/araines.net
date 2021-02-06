@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react"
-import { Box, IconButton, useColorMode } from "theme-ui"
-import Button from "./Button"
-import Icon from "@mdi/react"
-import { mdiMoonWaningCrescent } from "@mdi/js"
+import { Box, IconButton, useColorMode, Image } from "theme-ui"
 
 const ThemeToggle = (props) => {
   const [colorMode, setColorMode] = useColorMode()
@@ -30,7 +27,9 @@ const ThemeToggle = (props) => {
           setColorMode(colorMode === "default" ? "dark" : "default")
         }}
       >
-        <Icon path={mdiMoonWaningCrescent} rotate={-35} />
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" transform="rotate(-35,12,12)" d="M2 12A10 10 0 0 0 15 21.54A10 10 0 0 1 15 2.46A10 10 0 0 0 2 12Z" />
+        </svg>
       </IconButton>
     </Box>
   )

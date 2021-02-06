@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "@emotion/react": "^11.1.4",
-    "@mdi/js": "^5.9.55",
-    "@mdi/react": "^1.4.0",
     "@mdx-js/loader": "^1.6.22",
     "@mdx-js/runtime": "^1.6.22",
     "@next/mdx": "^10.0.5",
