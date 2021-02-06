@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Box, IconButton, useColorMode, Image } from "theme-ui"
+import { Box, IconButton, useColorMode } from "theme-ui"
 
 const ThemeToggle = (props) => {
   const [colorMode, setColorMode] = useColorMode()
@@ -24,7 +24,7 @@ const ThemeToggle = (props) => {
       <IconButton
         aria-label="Toggle dark mode"
         onClick={(e) => {
-          setColorMode(colorMode === "default" ? "dark" : "default")
+          setColorMode(colorMode === "dark" ? "default" : "dark")
         }}
       >
         <svg width="24" height="24" viewBox="0 0 24 24">
