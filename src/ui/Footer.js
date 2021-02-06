@@ -9,9 +9,7 @@ const Footer = (props) => (
       fontSize: 1,
     }}
   >
-    <Text sx={{ mx: 3, display: "inline-block" }}>
-      Andy Raines
-    </Text>
+    <Text sx={{ mx: 3, display: "inline-block" }}>Andy Raines</Text>
     <Text sx={{ mx: 3, display: "inline-block" }}>
       GitHub <a href="https://github.com/araines">araines</a>
     </Text>
