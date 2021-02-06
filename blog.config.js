@@ -5,7 +5,7 @@ module.exports = {
   description:
     "Personal blog for Andy Raines.  Software engineering, technology tinkering and more.",
   author: "Andy Raines",
-  analytics: "G-CP3W0Q9FV9", // put your google analytics code here to add tracking
+  analytics: "", // put your google analytics code here to add tracking
   shareImage: "https://araines.net/assets/images/araines.jpg",
   shareImageAlt: "Andy Raines",
   postsPerPage: 8,
