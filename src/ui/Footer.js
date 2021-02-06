@@ -5,21 +5,18 @@ const Footer = (props) => (
     sx={{
       p: 4,
       color: "#666",
-      textAlign: "center",
+      textAlign: "left",
       fontSize: 1,
     }}
   >
     <Text sx={{ mx: 3, display: "inline-block" }}>
-      Created by <a href="https://johnpolacek">John Polacek</a>
+      Andy Raines
     </Text>
     <Text sx={{ mx: 3, display: "inline-block" }}>
-      Open sourced on{" "}
-      <a href="https://github.com/johnpolacek/nextjs-mdx-blog-starter">
-        Github
-      </a>
+      GitHub <a href="https://github.com/araines">araines</a>
     </Text>
     <Text sx={{ mx: 3, display: "inline-block" }}>
-      Follow <a href="https://twitter.com/johnpolacek">@johnpolacek</a>
+      Follow <a href="https://twitter.com/andyraines">@andyraines</a>
     </Text>
   </Box>
 )
