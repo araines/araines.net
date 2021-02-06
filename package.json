@@ -1,6 +1,6 @@
 {
-  "name": "nextjs-mdx-blog-starter",
-  "description": "Starter for creating a Next.js powered blog with content authored in MDX.",
+  "name": "araines-net",
+  "description": "NextJS MDX Vercel deployment of personal blog at araines.net",
   "version": "0.2.3",
   "scripts": {
     "dev": "next",
@@ -29,6 +29,6 @@
     "onchange": "^7.1.0",
     "prettier": "^2.2.1"
   },
-  "repository": "https://github.com/johnpolacek/nextjs-mdx-blog-starter",
+  "repository": "https://github.com/araines/araines.net",
   "license": "MIT"
 }
