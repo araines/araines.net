@@ -59,6 +59,16 @@ export default {
     avatar: {
       width: 110,
       height: 110,
-    }
-  }
+    },
+  },
+  links: {
+    post: {
+      color: "inherit",
+      textDecoration: "none",
+      ":hover,:focus": {
+        color: "primary",
+        textDecoration: "underline",
+      },
+    },
+  },
 }

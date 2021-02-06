@@ -1,5 +1,5 @@
 import MDX from "@mdx-js/runtime"
-import { Flex, Box, Heading, Text } from "theme-ui"
+import { Flex, Box, Heading, Link as A } from "theme-ui"
 import Image from "next/image"
 import Container from "../ui/Container"
 import DraftBadge from "../ui/DraftBadge"
@@ -20,12 +20,10 @@ const Posts = ({ posts, prevPosts, nextPosts }) => {
               <Heading sx={{ pb: 2, position: "relative" }}>
                 {post.draft && <DraftBadge />}
                 <Link href={"/" + post.slug} passHref>
-                  <a>{post.title}</a>
+                  <A sx={{ variant: "links.post" }}>{post.title}</A>
                 </Link>
               </Heading>
-              <small>
-                {new Date(post.date).toLocaleDateString()}
-              </small>
+              <small>{new Date(post.date).toLocaleDateString()}</small>
               {post.coverImage && (
                 <Box
                   sx={{
