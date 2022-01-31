@@ -11,23 +11,23 @@
     "deploy": "git push origin main && vercel --prod"
   },
   "dependencies": {
-    "@emotion/react": "^11.1.4",
+    "@emotion/react": "^11.7.1",
     "@mdx-js/loader": "^1.6.22",
     "@mdx-js/runtime": "^1.6.22",
-    "@next/mdx": "^10.0.5",
-    "disqus-react": "^1.0.10",
-    "gray-matter": "^4.0.2",
-    "next": "^10.0.5",
-    "prism-react-renderer": "^1.1.1",
-    "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "@next/mdx": "^10.2.3",
+    "disqus-react": "^1.1.2",
+    "gray-matter": "^4.0.3",
+    "next": "^10.2.3",
+    "prism-react-renderer": "^1.2.1",
+    "prop-types": "^15.8.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-ga": "^3.3.0",
     "theme-ui": "^0.3.5"
   },
   "devDependencies": {
     "onchange": "^7.1.0",
-    "prettier": "^2.2.1"
+    "prettier": "^2.5.1"
   },
   "repository": "https://github.com/araines/araines.net",
   "license": "MIT"
